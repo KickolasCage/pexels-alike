@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  Route,
+  createRoutesFromElements,
+  createBrowserRouter,
+} from "react-router-dom";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+import "./App.css";
+import CategoryPage from "./components/CategoryPage";
+import MainPage from "./components/MainPage";
+import {fetchBackgroundImage} from './api/fetchApi'
+
+// function App() {
+//   return (
+//     <div className="App">
+//       <MainPage/>
+//     </div>
+//   );
+// }
+
+let App = createBrowserRouter(
+  createRoutesFromElements(
+    <>
+      <Route path="/" element={<MainPage />}
+        // loader={async () => {
+        //   const backgroundImage = (await fetchBackgroundImage()).data.photos[0]
+        //   return backgroundImage
+        // }}
+      />
+      <Route path="search" element={<CategoryPage />} />
+      <Route path="*" element={<p>Oops, nothing here!</p>}/>
+    </>
+  )
+);
 
 export default App;

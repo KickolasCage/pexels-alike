@@ -1,0 +1,26 @@
+.image-grid-container {
+    width: 70vw;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+
+.image-grid-header {    
+    margin-bottom: 10px;
+}
+
+.image-grid {    
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    justify-items: left;
+}
+
+.image-grid-column {
+    display: flex;
+    flex-flow: column;
+    justify-content: start;
+    row-gap: 10px;    
+}
