@@ -1,2 +1,2 @@
 # pexels-alike
-A Pexel-alike website
+A Pexels-alike website
