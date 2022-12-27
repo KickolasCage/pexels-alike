@@ -9,5 +9,5 @@ export const capitalize = (string) => {
   };
 
 export const randomPage = () => {
-    return Math.floor(Math.random() * 500).toString()
+    return Math.floor(Math.random() * 100).toString()
 }

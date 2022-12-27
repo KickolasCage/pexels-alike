@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
 import { useDispatch, useSelector } from "react-redux";
 
-import "../styles/ImageGrid.css";
-import { loadImages } from "../reducers/imageReducer";
+import "../../styles/ImageGrid.css";
+import { loadImages } from "../../reducers/imageReducer";
 import Image from "./Image";
 import ImagesNotFound from "./ImagesNotFound";
 import LoadingSpinner from "./LoadingSpinner";
@@ -22,39 +22,6 @@ const ImageGrid = (params) => {
     array.filter((value, index, Arr) => {
       return (index - offset) % 3 == 0;
     });
-
-  // implements infinite scroll
-  // by loading new images
-  const onScroll = () => {
-    const scrollTop = document.documentElement.scrollTop;
-    const scrollHeight = document.documentElement.scrollHeight;
-    const clientHeight = document.documentElement.clientHeight;
-    const bottomOffset = 50;
-    if (scrollTop + clientHeight >= scrollHeight) {
-      console.log("On scroll event handler!");
-      dispatch(loadImages());
-    }
-  };
-
-  // adds event listener for
-  // infinite scroll
-  useEffect(() => {
-    window.addEventListener("scroll", onScroll);
-    // console.log("Current window width: ", window.innerWidth)
-    return () => window.removeEventListener("scroll", onScroll);
-  });
-
-  const isFetched = useSelector((state) => state.images.isFetched);
-
-  const size = useSelector((state) => state.images.size);
-  const orientation = useSelector((state) => state.images.orientation);
-
-  const chooseSize = (img, imgSize) => {
-    return imgSize == "all" ? img.src["original"] : img.src[size];
-  };
-
-  // const chooseWidthForSize = {"all": 400, "large": 400, "small": 200, "medium": 300}
-
   // gets browser window's width
   const getWidth = () =>
     window.innerWidth ||
@@ -76,18 +43,52 @@ const ImageGrid = (params) => {
       window.removeEventListener("resize", resizeListener);
     };
   }, []);
+  // implements infinite scroll
+  // by loading new images
+  const onScroll = () => {
+    const scrollTop = document.documentElement.scrollTop;
+    const scrollHeight = document.documentElement.scrollHeight;
+    const clientHeight = document.documentElement.clientHeight;
+    const bottomOffset = width > 960 ? 50 : 150;
+    if (scrollTop + clientHeight >= scrollHeight - bottomOffset) {
+      dispatch(loadImages());
+    }
+  };
+
+  // adds event listener for
+  // infinite scroll
+  useEffect(() => {
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  });
+
+  const isFetched = useSelector((state) => state.images.isFetched);
+
+  const size = useSelector((state) => state.images.size);
+  const orientation = useSelector((state) => state.images.orientation);
+  const isCurated = useSelector((state) => state.images.isCurated);
+
+  const chooseSize = (img, imgSize) => {
+    const chooseSizeRandomly = () => {
+      return ["large", "medium", "small"][Math.floor(Math.random() * 3)];
+    };
+
+    return imgSize == "all" ? img.src[chooseSizeRandomly()] : img.src[size];
+  };
+
+  // const chooseWidthForSize = {"all": 400, "large": 400, "small": 200, "medium": 300}
 
   const computeWidth = (size) => {
     // widths for images (normal and minimal)
     const optimalWidth = (width * 0.8) / 3;
     const minWidth = 200;
     const maxWidths = {
-      'all' : 500,
-      'large': 500, 
-      'medium': 350,
-      'small': 200
-    }
-    const maxWidth = maxWidths[size]
+      all: 500,
+      large: 500,
+      medium: 350,
+      small: 200,
+    };
+    const maxWidth = maxWidths[size];
 
     if (optimalWidth > maxWidth) return maxWidth;
     else if (optimalWidth < minWidth) return minWidth;
@@ -111,7 +112,7 @@ const ImageGrid = (params) => {
                 authorName={img.photographer}
                 authorFace={""}
                 // image={img.src.large
-                image={chooseSize(img, size)}
+                image={isCurated ? img.src.large : chooseSize(img, size)}
                 isLiked={img.liked}
                 authorLink={img.photographer_url}
                 id={img.id}

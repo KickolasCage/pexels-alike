@@ -17,17 +17,13 @@ export const fetchBackgroundImage = async () =>
   });
 
 // fetches a page/batch of images   
-export const fetchImages = async (params) =>
-  // (query, per_page = "5", page = 1, orientation='all') =>
+export const fetchImages = async (params) =>  
   fetchApi
     .get("/search", {
-      params,
-      // { query: query, per_page: per_page, page: page },
+      params,  
     })
-    .catch((error) => {
-      console.log("Current error message: ", error.message);
-      console.log({ status: error.response.status, message: error.message });
-      return { status: error.response.status, message: error.response.message };
+    .catch((error) => {      
+      return Promise.reject({ status: error.response.status, message: error.message });
     });
 
 
@@ -37,20 +33,8 @@ export const fetchCuratedImages = async (params) =>
     .get("/curated", {
       params,
     })
-    .catch((error) => []);
+    .catch((error) => {      
+      return Promise.reject({ status: error.response.status, message: error.message });
+    });
 
-// export const fetchImagesWithFilters = async (query, per_page = 5, page = 1) => {
-//   fetchApi.get("/search", {
-//     params: { query, per_page, page },
-//   });
-// };
 
-// const getImagesWithFilters = async (query, page, orientation, size) =>
-//   fetchApi.get("/", {
-//     params: {
-//       query,
-//       page,
-//       size,
-//       orientation,
-//     },
-//   });

@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 
 import "./App.css";
+import ErrorPage from "./components/pages/ErrorPage";
 import CategoryPage from "./components/pages/CategoryPage";
 import MainPage from "./components/pages/MainPage";
 
@@ -19,7 +20,7 @@ let App = createBrowserRouter(
       {/* route for all other queries */}
       <Route
         path="*"
-        element={<p style={{ textAlign: "center" }}>Oops, nothing here!</p>}
+        element={<ErrorPage/>}
       />
     </>
   )

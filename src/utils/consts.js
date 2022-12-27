@@ -1,1 +1,1 @@
-export const numOfPagesToFetch = '9'
+export const numOfPagesToFetch = '15'

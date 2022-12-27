@@ -91,8 +91,7 @@ const backgroundImageSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(loadBackgroundImage.pending, (state) => {
-        console.log("Pending...");
+      .addCase(loadBackgroundImage.pending, (state) => {        
       })
       .addCase(loadBackgroundImage.fulfilled, (state, action) => {
         state.isFetched = true;

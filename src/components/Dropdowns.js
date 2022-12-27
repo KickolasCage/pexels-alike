@@ -8,37 +8,33 @@ import {
   loadImages,
   removeImages,
 } from "../reducers/imageReducer";
+import { numOfPagesToFetch } from "../utils/consts";
+import { randomPage } from "../utils/utilFunctions";
 
-// dropdown for choosing images' size
-export const DropdownSize = () => {
+const Dropdown = (params) => {
+  const selector = params.selector;
+  const options = params.options;
+  const name = params.name;
+  const onChangeHandler = params.onChangeHandler;
+
   const navigate = useNavigate();
   const { query } = useParams();
 
-  const size = useSelector((state) => state.images.size);
+  const state = useSelector(selector);
   const dispatch = useDispatch();
-
-  const onChange = (event) => {
-    const option = event.target.value;
-    dispatch(changeSize(option));
-    console.log("It works: ", option);
-
-    // navigate(`/search/${query}`)
-  };
-
-  const options = ["all", "large", "medium", "small"];
 
   return (
     <Form action>
       <select
-        value={size}
+        value={state}
         className="dropdown"
-        name="size"
-        id="size"
-        onChange={onChange}
+        name={name}
+        id={name}
+        onChange={onChangeHandler}
       >
         {options.map((option, index) => (
           <option value={option} key={index}>
-            {option != "all" ? option : "All sizes"}
+            {option != "all" ? option : `All ${name}s`}
           </option>
         ))}
       </select>
@@ -46,40 +42,41 @@ export const DropdownSize = () => {
   );
 };
 
+// dropdown for choosing images' size
+export const DropdownSize = () => {
+  const dispatch = useDispatch();
+  const selector = (state) => state.images.size;
+  const name = "size";
+  const options = ["all", "large", "medium", "small"];
+  const onChangeHandler = (event) => {
+    const option = event.target.value;
+    dispatch(changeSize(option));
+  };
 
-// dropdown for choosing images' orientation
+  const params = {selector, name, options, onChangeHandler}
+  return <Dropdown {...params}/>;
+};
+
 export const DropdownOrientation = () => {
   const options = ["all", "landscape", "portrait", "square"];
-
+  const dispatch = useDispatch();
+  const selector = (state) => state.images.orientation
   const navigate = useNavigate();
   const { query } = useParams();
-  
-  const dispatch = useDispatch();
-
-  const onChange = (event) => {
-    const chosenOrientation = event.target.value;
-    console.log("It works: ", chosenOrientation);
+  const name = 'orientation'
+  const onChangeHandler = (event) => {
+    const chosenOrientation = event.target.value;    
     dispatch(removeImages());
-    let newQuery = { query, per_page: "9", page: "1" };
+    let newQuery = { query, per_page: numOfPagesToFetch, page: randomPage() };
     if (chosenOrientation != "all") newQuery.orientation = chosenOrientation;
     dispatch(loadImages(newQuery));
     dispatch(changeOrientation(chosenOrientation));
   };
 
-  return (
-    <Form action>
-      <select
-        className="dropdown"
-        name="orientation"
-        id="orientation"
-        onChange={onChange}
-      >
-        {options.map((option, index) => (
-          <option value={option} key={index}>
-            {option != "all" ? option : "All orientations"}
-          </option>
-        ))}
-      </select>
-    </Form>
-  );
-};
+  const props = {selector, name, options, onChangeHandler}
+
+  return <Dropdown {...props}/>
+}
+
+
+

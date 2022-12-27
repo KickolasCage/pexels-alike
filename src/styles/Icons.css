@@ -1,9 +1,18 @@
-.icon-container {
+.image-container {
   border: 1px solid #dddddd;
   /* width: 300px;
   height: 400px; */
   position: relative;
   border: none;
+}
+
+.image-info-container {
+  transition: all 0.5s;
+  opacity: 0;
+}
+
+.image-container:hover .image-info-container {
+  opacity: 1;
 }
 
 .icons {
@@ -14,21 +23,15 @@
   display: flex;
   gap: 2px;
   align-items: center;
-  justify-content: space-between;
-  opacity: 0;
-  transition: all 0.5s;
+  justify-content: space-between;  
 }
 
 .icon {
-    color: white;
-    width: 25px;
-    height: 25px;
+  color: white;
+  width: 25px;
+  height: 25px;
 }
 
-.icon:hover {  
+.icon:hover {
   color: grey;
-}
-
-.icons:hover {
-  opacity: 1;
 }

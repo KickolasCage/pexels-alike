@@ -1,4 +1,4 @@
-import '../styles/LoadingSpinner.css'
+import '../../styles/LoadingSpinner.css'
 
 // a spinner that's displayed during the loading of the page
 const LoadingSpinner = () => {

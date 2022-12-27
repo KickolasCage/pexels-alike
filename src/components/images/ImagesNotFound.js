@@ -3,14 +3,12 @@ import { useSelector } from "react-redux";
 // displayed if images didn't load due to 
 // bad search query  or server-side error
 const ImagesNotFound = () => {
-  const error = useSelector(state => state.images.error)
-  const state = useSelector(state => state)
-  console.log(error, " - error state")
+  const error = useSelector(state => state.images.error)  
   return (
     <div style={{ textAlign: "center" }}>
      {(error.status) ?
       <>
-      <h1>Error: code {error.code}</h1>
+      <h1>Error status: {error.status}</h1>
       <h2>{error.message}</h2>
       </> :
       <>

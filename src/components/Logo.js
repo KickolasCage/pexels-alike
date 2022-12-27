@@ -8,7 +8,7 @@ const Logo = () => {
     <a href="#"
       onClick={(e) => {
         navigate("/");
-        navigate(0);
+        navigate(0); // reloads the page
       }}
     >
       <img
