@@ -1,3 +1,4 @@
+// returns 7 random popular search queries
 export const choose7RandomCategories = () => {
   const images = [
     "Nature",
@@ -18,7 +19,7 @@ export const choose7RandomCategories = () => {
     "Technology",
     "Art",
     "House",
-    "Sky",
+    "Sky"
   ];
 
   return images.sort(() => 0.5 - Math.random()).slice(0, 7);

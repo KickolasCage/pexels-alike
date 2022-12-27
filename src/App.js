@@ -5,29 +5,22 @@ import {
 } from "react-router-dom";
 
 import "./App.css";
-import CategoryPage from "./components/CategoryPage";
-import MainPage from "./components/MainPage";
-import {fetchBackgroundImage} from './api/fetchApi'
+import CategoryPage from "./components/pages/CategoryPage";
+import MainPage from "./components/pages/MainPage";
 
-// function App() {
-//   return (
-//     <div className="App">
-//       <MainPage/>
-//     </div>
-//   );
-// }
-
+// the entire app
 let App = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<MainPage />}
-        // loader={async () => {
-        //   const backgroundImage = (await fetchBackgroundImage()).data.photos[0]
-        //   return backgroundImage
-        // }}
+      {/* route for the main/landing page */}
+      <Route path="/" element={<MainPage />} />
+      {/* route for search page */}
+      <Route path="search/:query" element={<CategoryPage />} />
+      {/* route for all other queries */}
+      <Route
+        path="*"
+        element={<p style={{ textAlign: "center" }}>Oops, nothing here!</p>}
       />
-      <Route path="search" element={<CategoryPage />} />
-      <Route path="*" element={<p>Oops, nothing here!</p>}/>
     </>
   )
 );

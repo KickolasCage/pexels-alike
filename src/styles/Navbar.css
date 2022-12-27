@@ -17,6 +17,7 @@
 }
 
 .navbar-logo {
+    margin-right: 10px;
     margin-left: 10px;
 }
 
@@ -29,9 +30,10 @@
 }
 
 .navbar-button {
+  font-size: large;
   background-color: green;
   color: white;
-  border-radius: 15%;
+  border-radius: 5%;
   border: none;
   padding: 5px 15px;
   margin: 10px;

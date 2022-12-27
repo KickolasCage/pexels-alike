@@ -1,0 +1,28 @@
+.author-info {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 1000;
+
+  opacity: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: left;
+
+  transition: all 0.5s;
+}
+
+.author-info:hover{
+    opacity: 1;    
+}
+
+.author-image {
+  border-radius: 100%;
+  margin-right: 5px;
+}
+
+.author-name {
+  color: white;
+  font-size: large;
+}

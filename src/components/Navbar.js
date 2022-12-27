@@ -1,22 +1,19 @@
-import styled from "styled-components";
-import "../styles/Navbar.css";
+import { nanoid } from "nanoid";
 
+import "../styles/Navbar.css";
+import Logo from "./Logo";
+
+// the row of navbar buttons 
+// (currently disabled/no functionality added to them)
 const Navbar = () => {
   return (
     <div className="navbar">
       <div>
-        <a href='#'>
-          <img
-            width={90}
-            height={30}
-            src="https://images.pexels.com/lib/api/pexels-white.png"
-            className="navbar-logo"            
-          />
-        </a>        
+        <Logo/>       
       </div>
       <div className="navbar-links">
         {["Explore", "License", "Upload", "•••"].map((el) => (
-          <div className="navbar-link">{el}</div>
+          <div className="navbar-link" key={nanoid()}>{el}</div>
         ))}
         <button className="navbar-button">Join</button>
       </div>

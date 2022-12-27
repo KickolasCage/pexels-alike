@@ -1,11 +1,10 @@
-import { configureStore, ConfigureStoreOptions } from "@reduxjs/toolkit"
+import { configureStore} from "@reduxjs/toolkit"
 
-const preloadedState = {
-    images : [], 
-    backgroundImage : 'https://images.pexels.com/photos/14709395/pexels-photo-14709395.jpeg'
-}
+import backgroundImageReducer from './backgroundImageSlice'
+import imageReducer from "./imageReducer";
 
-const store = configureStore({preloadedState, reducer:{}})
+// reudx store
+const store = configureStore({reducer:{background: backgroundImageReducer, images: imageReducer}})
 
 export default store;
 

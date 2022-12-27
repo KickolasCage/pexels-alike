@@ -1,0 +1,24 @@
+.searchbar {
+  padding: 10px;
+  /* padding-left: 10px; */
+  justify-content: space-between;
+  transition: all 1s;
+  position: sticky;
+  background-color: black;
+  top: 0;
+  font-size: large;
+  z-index: 100;
+}
+
+/* .search-input {
+  border: none;
+  padding: 5px;
+  padding-left: 10px;
+  border-radius: 5px;
+  width: 1wv;
+} */
+
+.search-logo {
+    margin-left: 50px;
+    margin-right: 50px;
+}
