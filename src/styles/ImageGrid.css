@@ -1,12 +1,4 @@
 .image-grid-container {
-    /* margin-left: auto;     */
-    /* position: absolute;    
-    left: 20vw; */
-    /* margin-left: 20vw; */
-    /* margin-right: max(50px, 20vw); */
-    
-    /* width: 50vw; */
-    /* margin-left: 25%;     */
     margin-left: auto;
     margin-right: auto;
     margin-top: 50px;
@@ -26,15 +18,7 @@
 
     margin-top: 50px;
     margin-bottom: 50px; 
-
-    /* width: 50vw; */
-
-    /* display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    column-gap: 10px;
-    justify-items: center; */
-    display: flex;
-    /* justify-items: center; */
+    display: flex;    
     gap: 10px;
     justify-content: center;
 }
@@ -42,7 +26,8 @@
 .image-grid-column {
     display: flex;
     flex-flow: column;
-    justify-content: start;
+    justify-content: flex-start;
+    flex-shrink: 1;
     row-gap: 10px;    
 }
 

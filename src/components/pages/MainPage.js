@@ -11,9 +11,6 @@ import { numOfPagesToFetch } from "../../utils/consts";
 // main/landing page
 const MainPage = () => {
   const dispatch = useDispatch();
-  const isFetchedBackground = useSelector(
-    (state) => state.background.isFetched
-  );
   const isFetchedImages = useSelector((state) => state.images.isFetched);
   useEffect(() => {    
     dispatch(setCurated(true))

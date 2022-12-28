@@ -11,8 +11,6 @@ import LoadingSpinner from "./LoadingSpinner";
 // image grid that displays images
 // according to user-submitted query
 const ImageGrid = (params) => {
-  // const { query } = useParams();
-
   const dispatch = useDispatch();
   const images = useSelector((state) => state.images.imagesList);
 
@@ -46,11 +44,14 @@ const ImageGrid = (params) => {
   // implements infinite scroll
   // by loading new images
   const onScroll = () => {
+    console.log("On scroll event handler!")
     const scrollTop = document.documentElement.scrollTop;
     const scrollHeight = document.documentElement.scrollHeight;
     const clientHeight = document.documentElement.clientHeight;
-    const bottomOffset = width > 960 ? 50 : 150;
-    if (scrollTop + clientHeight >= scrollHeight - bottomOffset) {
+    // const bottomOffset = width > 960 ? 50 : 150;
+    if (scrollTop + clientHeight >= scrollHeight - 100) {
+      // pages are loaded based on the initial query 
+      // made by the outer container
       dispatch(loadImages());
     }
   };
@@ -70,7 +71,7 @@ const ImageGrid = (params) => {
 
   const chooseSize = (img, imgSize) => {
     const chooseSizeRandomly = () => {
-      return ["large", "medium", "small"][Math.floor(Math.random() * 3)];
+      return ["large", "medium"][Math.floor(Math.random() * 2)];
     };
 
     return imgSize == "all" ? img.src[chooseSizeRandomly()] : img.src[size];
@@ -110,14 +111,12 @@ const ImageGrid = (params) => {
               <Image
                 key={nanoid()}
                 authorName={img.photographer}
-                authorFace={""}
-                // image={img.src.large
+                authorFace={""}                
                 image={isCurated ? img.src.large : chooseSize(img, size)}
                 isLiked={img.liked}
                 authorLink={img.photographer_url}
                 id={img.id}
-                alt={img.alt}
-                // width={width > 960 ? chooseWidthForSize[size] : 200}
+                alt={img.alt}                
                 width={computeWidth(size)}
               />
             ))}

@@ -1,4 +1,4 @@
-import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchImages, fetchCuratedImages } from "../api/fetchApi";
 import { fetchApi } from "../api/fetchApi";
 
@@ -38,10 +38,8 @@ const loadImages = createAsyncThunk(
   }
 );
 
-// slice that contains data about loaded images
-const imageSlice = createSlice({
-  name: "images",
-  initialState: {
+
+const initialState = {
     imagesList: [], // list of fetched images
     isFetched: false, // variable to track fetching status
     page: 1,
@@ -50,7 +48,12 @@ const imageSlice = createSlice({
     nextPageLink: "", // link to the next page (batch of images to be loaded later)
     error: {}, // error to be displayed
     isCurated: false
-  },
+  }
+
+// slice that contains data about loaded images
+const imageSlice = createSlice({
+  name: "images",
+  initialState,
   // reducers that:
   reducers: {
     // changes user's preferred image size
@@ -72,8 +75,11 @@ const imageSlice = createSlice({
       }
     },    
     // removes already loaded images
-    removeImages: (state) => {
+    removeImages: (state,action) => {
       state.imagesList = [];
+      if (action.payload && action.payload.resetAll){
+        state = initialState
+      }
     },
     setCurated : (state, action) => {
         state.isCurated = action.payload
@@ -88,6 +94,7 @@ const imageSlice = createSlice({
       })
       .addCase(loadImages.fulfilled, (state, action) => {
         state.isFetched = true;
+        console.log("next link: ", state.nextPageLink)
         if (action.payload) {          
           if (action.payload.message) {            
             state.error = action.payload;
@@ -97,7 +104,11 @@ const imageSlice = createSlice({
             state.imagesList = [
               ...state.imagesList,
               ...action.payload.photos.sort(
-                (img1, img2) => img1.height >= img2.height
+                (img1, img2) => {
+                    if (img1.height < img2.height) return 1;
+                    else if (img1.height == img2.height) return 0;
+                    else return -1;
+                }
               ),
             ];            
             state.page += 1;

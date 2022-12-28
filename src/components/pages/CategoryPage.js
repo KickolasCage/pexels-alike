@@ -16,17 +16,14 @@ const CategoryPage = () => {
   
   const { query } = useParams(); // user-submitted query
   const dispatch = useDispatch()
-  // checks if first page of images succesfully fetched
-  const isFetched = useSelector(state => !!state.images.imagesList)
-
+  
   useEffect(()=>{
     // loads initial page of images
     dispatch(setCurated(false))
     dispatch(loadImages({query, per_page:numOfPagesToFetch, page:randomPage()}))    
   }, [])
 
-  return (    
-    isFetched &&
+  return (        
     <>
       <SearchBar alwaysSticky />
       <h1 style={{ textAlign: "center" }}>{capitalize(query)} Photos</h1>

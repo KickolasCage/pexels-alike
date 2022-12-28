@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
 import "../styles//Search.css";
 import { loadBackgroundImage } from "../reducers/backgroundImageSlice";
+import { nanoid } from "nanoid";
+import { removeImages } from "../reducers/imageReducer";
 
 // the search block/landing page
 const Search = () => {
@@ -21,23 +23,23 @@ const Search = () => {
     (state) => state.background.image.photographer_url
   );
 
-  // variable to check whether background image 
+  // variable to check whether background image
   // was succesfully fetched
   const isFetched = useSelector((state) => state.background.isFetched);
   useEffect(() => {
     dispatch(loadBackgroundImage());
-    }, []);
+  }, []);
 
   // search query submitted by user
   const [searchQuery, setSearchQuery] = useState("");
 
   const navigate = useNavigate();
 
-  //Function that forwards user to the search page  
+  //Function that forwards user to the search page
   const onSubmit = (event) => {
     event.preventDefault();
-    navigate(`/search/${searchQuery}`);
-    navigate(0);
+    dispatch(removeImages())
+    navigate(`/search/${searchQuery}`);    
   };
 
   // seven random popular categories
@@ -49,9 +51,13 @@ const Search = () => {
   return (
     <div
       className="search"
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-      }}
+      style={
+        isFetched
+          ? {
+              backgroundImage: `url(${backgroundImage})`,
+            }
+          : { backgroundColor: "darkgrey" }
+      }
     >
       <Navbar />
       <div className="container">
@@ -73,25 +79,28 @@ const Search = () => {
           {sevenRandomCategories // render 7 random search categories
             .map((el) => el.toLowerCase())
             .map((el, id) => (
-              <>                
+              <>
                 <a
                   onClick={(e) => {
-                    navigate(`search/${el}`);
-                    navigate(0);
+                    dispatch(removeImages())
+                    navigate(`search/${el}`);                    
                   }}
                   className="search-example-links"
+                  key={nanoid()}
                 >
                   {el}
                 </a>
-                <span style={{color: 'white'}}>{id != 6 && ", "}</span>
+                <span style={{ color: "white" }} key={nanoid()}>
+                  {id != 6 && ", "}
+                </span>
               </>
             ))}
         </p>
       </div>
-            
+
       <a href={photographer_url} target="_blank" className="search-credits">
         {/* link to photographer's page */}
-        <b>{`Photo by ${photographer}`}</b>        
+        {isFetched &&<b>{`Photo by ${photographer}`}</b>}
       </a>
     </div>
   );

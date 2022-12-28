@@ -4,9 +4,6 @@
   /* background-color: gray; placeholder for now */
   /* background-image: url("https://images.pexels.com/photos/14709395/pexels-photo-14709395.jpeg"); */
   position: relative;
-  /* display: flex;
-    flex-direction: column;
-    justify-content: center; */
     font-size: large;
 }
 
@@ -17,8 +14,7 @@
   align-items: flex-start;
   width: 60vw;
   top: 30%;
-  left: 25vw;
-  /* right: 25vw; */
+  left: 25vw;  
 }
 
 .search-example-links {
@@ -50,8 +46,6 @@
   padding: 0;
   margin: 0;
   border: none;
-  /* border: 1px solid transparent; */
-  /* border-radius: inherit; */
   background: transparent
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' class='bi bi-search' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E")
     no-repeat center;
@@ -60,8 +54,7 @@
 }
 
 .search-form button[type="submit"]:focus,
-.search-form input[type="search"]:focus {
-  /* border-color: #1183d6; */
+.search-form input[type="search"]:focus {  
   outline: none;
 }
 
@@ -91,8 +84,7 @@
 .search-credits {
   position: absolute;
   bottom: 2%;
-  right: 1%;
-  /* opacity: 0.5; */
+  right: 1%;  
   text-decoration: none;
   color: white;
   

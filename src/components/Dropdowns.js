@@ -60,8 +60,7 @@ export const DropdownSize = () => {
 export const DropdownOrientation = () => {
   const options = ["all", "landscape", "portrait", "square"];
   const dispatch = useDispatch();
-  const selector = (state) => state.images.orientation
-  const navigate = useNavigate();
+  const selector = (state) => state.images.orientation  
   const { query } = useParams();
   const name = 'orientation'
   const onChangeHandler = (event) => {
