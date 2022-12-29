@@ -60,7 +60,7 @@ const Image = (props) => {
             <IconHeartNotLiked className="icon" onClick={onClick} />
           )}
           <IconAddToLibrary className="icon" />
-          <IconDownload className="icon" />
+          <IconDownload className="icon" url={image} />
         </div>
       </div>
       {/* image itself */}

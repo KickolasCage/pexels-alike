@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchImages, fetchCuratedImages } from "../api/fetchApi";
 import { fetchApi } from "../api/fetchApi";
+import { balanceGridColumns } from "../utils/utilFunctions";
 
 // thunk that loads images
 // based on user's query
@@ -47,7 +48,8 @@ const initialState = {
     size: "all", // user's preferred image size
     nextPageLink: "", // link to the next page (batch of images to be loaded later)
     error: {}, // error to be displayed
-    isCurated: false
+    isCurated: false, // whether curated images are required
+    columnHeights: [0,0,0]
   }
 
 // slice that contains data about loaded images
@@ -99,17 +101,18 @@ const imageSlice = createSlice({
           if (action.payload.message) {            
             state.error = action.payload;
           } else {
-            state.nextPageLink = action.payload.next_page;
+            state.nextPageLink = action.payload.next_page; 
+
+            let {balancedImgArray, columnHeights} = balanceGridColumns(action.payload.photos, state.columnHeights)
+            state.columnHeights = columnHeights
+            console.log("Heights: ", state.columnHeights)
             // adds new images to the list of images
             state.imagesList = [
               ...state.imagesList,
-              ...action.payload.photos.sort(
-                (img1, img2) => {
-                    if (img1.height < img2.height) return 1;
-                    else if (img1.height == img2.height) return 0;
-                    else return -1;
-                }
-              ),
+              ...balancedImgArray.map((img) => {        
+                img.preferredSize = ["large", "medium"][Math.floor(Math.random() * 2)];
+                return img
+              })
             ];            
             state.page += 1;
           }

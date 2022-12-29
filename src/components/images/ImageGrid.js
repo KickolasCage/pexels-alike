@@ -7,6 +7,7 @@ import { loadImages } from "../../reducers/imageReducer";
 import Image from "./Image";
 import ImagesNotFound from "./ImagesNotFound";
 import LoadingSpinner from "./LoadingSpinner";
+import { debounce } from "../../utils/utilFunctions";
 
 // image grid that displays images
 // according to user-submitted query
@@ -43,20 +44,20 @@ const ImageGrid = (params) => {
   }, []);
   // implements infinite scroll
   // by loading new images
-  const onScroll = () => {
-    console.log("On scroll event handler!")
+  const onScroll = debounce(() => {
+    console.log("On scroll event handler!");
     const scrollTop = document.documentElement.scrollTop;
     const scrollHeight = document.documentElement.scrollHeight;
     const clientHeight = document.documentElement.clientHeight;
     // const bottomOffset = width > 960 ? 50 : 150;
     if (scrollTop + clientHeight >= scrollHeight - 100) {
-      // pages are loaded based on the initial query 
+      // pages are loaded based on the initial query
       // made by the outer container
       dispatch(loadImages());
     }
-  };
+  });
 
-  // adds event listener for
+  // adds event listener for implementing
   // infinite scroll
   useEffect(() => {
     window.addEventListener("scroll", onScroll);
@@ -70,11 +71,10 @@ const ImageGrid = (params) => {
   const isCurated = useSelector((state) => state.images.isCurated);
 
   const chooseSize = (img, imgSize) => {
-    const chooseSizeRandomly = () => {
-      return ["large", "medium"][Math.floor(Math.random() * 2)];
-    };
-
-    return imgSize == "all" ? img.src[chooseSizeRandomly()] : img.src[size];
+    // const chooseSizeRandomly = () => {      
+    //   return ["large", "medium"][Math.floor(Math.random() * 2)];
+    // };
+    return imgSize == "all" ? img.src[img.preferredSize] : img.src[size];
   };
 
   // const chooseWidthForSize = {"all": 400, "large": 400, "small": 200, "medium": 300}
@@ -111,12 +111,12 @@ const ImageGrid = (params) => {
               <Image
                 key={nanoid()}
                 authorName={img.photographer}
-                authorFace={""}                
+                authorFace={""}
                 image={isCurated ? img.src.large : chooseSize(img, size)}
                 isLiked={img.liked}
                 authorLink={img.photographer_url}
                 id={img.id}
-                alt={img.alt}                
+                alt={img.alt}
                 width={computeWidth(size)}
               />
             ))}
@@ -124,7 +124,7 @@ const ImageGrid = (params) => {
         ))}
       </div>
       {/* displays a loading spinner if images didn't fetch already     */}
-      {!isFetched && <LoadingSpinner />}
+      {<LoadingSpinner />}
     </>
   );
 };
