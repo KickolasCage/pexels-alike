@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchBackgroundImage } from "../api/fetchApi";
-import choose7RandomCategories from "../components/mostPopularCategories";
-import { getBackgroundImage } from "../filters/filters";
+import {choose7RandomCategories} from "../utils/utilFunctions";
+
 
 
 // thunk for loading the background image on
@@ -29,7 +29,11 @@ const backgroundImageSlice = createSlice({
     isFetched: false,
     suggestions: choose7RandomCategories()
   },  
-  reducers: {},
+  reducers: {
+    updateSuggestions : (state) => {
+      state.suggestions = choose7RandomCategories()
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loadBackgroundImage.pending, (state) => {        
@@ -37,10 +41,11 @@ const backgroundImageSlice = createSlice({
       })
       .addCase(loadBackgroundImage.fulfilled, (state, action) => {
         state.isFetched = true;
-        state.image = getBackgroundImage(action.payload);
+        state.image = action.payload.src.large2x;
       });
   },
 });
 
 export { loadBackgroundImage };
+export const {updateSuggestions}  = backgroundImageSlice.actions
 export default backgroundImageSlice.reducer;

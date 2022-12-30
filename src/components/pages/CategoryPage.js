@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import SearchBar from "../StickySearchBar";
 import ImageGrid from "../images/ImageGrid";
-import { DropdownOrientation, DropdownSize } from "../Dropdowns";
+import { DropdownOrientation, DropdownSize } from "../images/Dropdowns";
 
-import { loadImages, setCurated } from "../../reducers/imageReducer";
+import { loadImages, loadLocalStorage, resetImageGridState, resetColumnHeights, saveLocalStorage, setCurated } from "../../reducers/imageReducer";
 import { useEffect } from "react";
 import { capitalize, randomPage } from "../../utils/utilFunctions";
 import { numOfPagesToFetch } from "../../utils/consts";
@@ -19,8 +19,9 @@ const CategoryPage = () => {
   
   useEffect(()=>{
     // loads initial page of images
+    // dispatch(resetColumnHeights())
     dispatch(setCurated(false))
-    dispatch(loadImages({query, per_page:numOfPagesToFetch, page:randomPage()}))    
+    dispatch(loadImages({query, per_page:numOfPagesToFetch, page:randomPage()}))        
   }, [])
 
   return (        

@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 
 import Navbar from "./Navbar";
 import "../styles//Search.css";
-import { loadBackgroundImage } from "../reducers/backgroundImageSlice";
+import { loadBackgroundImage, updateSuggestions } from "../reducers/backgroundImageSlice";
 import { nanoid } from "nanoid";
-import { removeImages } from "../reducers/imageReducer";
+import { resetImageGridState, resetLocalStorage } from "../reducers/imageReducer";
 
 // the search block/landing page
 const Search = () => {
@@ -28,6 +28,7 @@ const Search = () => {
   const isFetched = useSelector((state) => state.background.isFetched);
   useEffect(() => {
     dispatch(loadBackgroundImage());
+    dispatch(updateSuggestions())
   }, []);
 
   // search query submitted by user
@@ -38,8 +39,9 @@ const Search = () => {
   //Function that forwards user to the search page
   const onSubmit = (event) => {
     event.preventDefault();
-    dispatch(removeImages())
-    navigate(`/search/${searchQuery}`);    
+    navigate(`/search/${searchQuery}`);   
+    dispatch(resetImageGridState({resetAll : true})) 
+    dispatch(resetLocalStorage())
   };
 
   // seven random popular categories
@@ -82,7 +84,8 @@ const Search = () => {
               <>
                 <a
                   onClick={(e) => {
-                    dispatch(removeImages())
+                    dispatch(resetImageGridState())
+                    dispatch(resetLocalStorage())
                     navigate(`search/${el}`);                    
                   }}
                   className="search-example-links"

@@ -1,21 +1,22 @@
-import {createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchImages, fetchCuratedImages } from "../api/fetchApi";
 import { fetchApi } from "../api/fetchApi";
 import { balanceGridColumns } from "../utils/utilFunctions";
+import { defaultState } from "../utils/consts";
 
 // thunk that loads images
 // based on user's query
 const loadImages = createAsyncThunk(
   "images/load",
   async (queryParams, thunkAPI) => {
-    try {
+    try {      
       let response;
       // if user didn't provide any parameters
       // tries to load the next page
-      if (!queryParams) {        
-        const nextPage = thunkAPI.getState().images.nextPageLink;        
+      if (!queryParams) {
+        const nextPage = thunkAPI.getState().images.nextPageLink;
         // checks if next page link exists
-        if (nextPage) {          
+        if (nextPage) {
           response = await fetchApi.get(nextPage);
           return response.data;
         } else {
@@ -25,12 +26,12 @@ const loadImages = createAsyncThunk(
       // fetches page of curated images
       if (queryParams.isCurated) {
         delete queryParams.isCurated;
-        response = await fetchCuratedImages(queryParams);        
+        response = await fetchCuratedImages(queryParams);
         return response.data;
       }
       // fetches page of ordinary pages otherwise
-      else {        
-        response = await fetchImages(queryParams);        
+      else {
+        response = await fetchImages(queryParams);
         return response.data;
       }
     } catch (e) {
@@ -40,22 +41,10 @@ const loadImages = createAsyncThunk(
 );
 
 
-const initialState = {
-    imagesList: [], // list of fetched images
-    isFetched: false, // variable to track fetching status
-    page: 1,
-    orientation: "all", // user's preferred image orientation
-    size: "all", // user's preferred image size
-    nextPageLink: "", // link to the next page (batch of images to be loaded later)
-    error: {}, // error to be displayed
-    isCurated: false, // whether curated images are required
-    columnHeights: [0,0,0]
-  }
-
 // slice that contains data about loaded images
 const imageSlice = createSlice({
   name: "images",
-  initialState,
+  initialState: defaultState,
   // reducers that:
   reducers: {
     // changes user's preferred image size
@@ -70,50 +59,61 @@ const imageSlice = createSlice({
     // saves user's likes
     switchLike: (state, action) => {
       const id = action.payload.id;
-      for (let image of state.imagesList) {
-        if (image.id == id) {
-          image.liked = !image.liked;
+      for (let column of state.columns) {
+        for (let image of column) {
+          if (image.id == id) {            
+            image.liked = !image.liked;
+          }
         }
       }
-    },    
-    // removes already loaded images
-    removeImages: (state,action) => {
-      state.imagesList = [];
-      if (action.payload && action.payload.resetAll){
-        state = initialState
-      }
     },
-    setCurated : (state, action) => {
-        state.isCurated = action.payload
-    }
+    // removes already loaded images
+    resetImageGridState: (state, action) => {      
+      state.columns = [[],[], []]
+      state = defaultState
+    },
+    setCurated: (state, action) => {
+      state.isCurated = action.payload;
+    },
+    resetLocalStorage : (state) => {        
+      state.resetAll = true;
+  }
+
   },
   // reducer that tracks stages of
   // image fetching
   extraReducers: (builder) => {
     builder
-      .addCase(loadImages.pending, (state) => {        
+      .addCase(loadImages.pending, (state) => {
         state.isFetched = false;
+        delete state.resetAll
       })
       .addCase(loadImages.fulfilled, (state, action) => {
-        state.isFetched = true;
-        console.log("next link: ", state.nextPageLink)
-        if (action.payload) {          
-          if (action.payload.message) {            
+        state.isFetched = true;        
+        console.log('columns', state.columnHeights)
+        if (action.payload) {
+          if (action.payload.message) {
             state.error = action.payload;
           } else {
-            state.nextPageLink = action.payload.next_page; 
+            state.nextPageLink = action.payload.next_page;
 
-            let {balancedImgArray, columnHeights} = balanceGridColumns(action.payload.photos, state.columnHeights)
-            state.columnHeights = columnHeights
-            console.log("Heights: ", state.columnHeights)
+            let { balancedImgArray, columnHeights } = balanceGridColumns(
+              action.payload.photos,
+              state.columnHeights
+            );
+            state.columnHeights = columnHeights;            
             // adds new images to the list of images
-            state.imagesList = [
-              ...state.imagesList,
-              ...balancedImgArray.map((img) => {        
-                img.preferredSize = ["large", "medium"][Math.floor(Math.random() * 2)];
-                return img
-              })
-            ];            
+            for (const index of [0, 1, 2]) {
+              state.columns[index] = state.columns[index].concat(
+                balancedImgArray[index]
+              );
+              state.columns[index].map((img) => {
+                img.preferredSize = ["large", "medium"][
+                  Math.floor(Math.random() * 2)
+                ];
+                return img;
+              });
+            }
             state.page += 1;
           }
         }
@@ -122,6 +122,12 @@ const imageSlice = createSlice({
 });
 
 export { loadImages };
-export const { removeImages, changeOrientation, changeSize, switchLike, setCurated } =
-  imageSlice.actions;
+export const {
+  resetImageGridState,
+  changeOrientation,
+  changeSize,
+  switchLike,
+  setCurated,  
+  resetLocalStorage
+} = imageSlice.actions;
 export default imageSlice.reducer;

@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { removeImages } from "../reducers/imageReducer";
+import { resetImageGridState, resetLocalStorage } from "../reducers/imageReducer";
 
 
 // Pexels logo
@@ -9,9 +9,10 @@ const Logo = () => {
   const navigate = useNavigate();
 
   const onClick = (e) => {        
+    dispatch(resetImageGridState({resetAll: true}))
+    dispatch(resetLocalStorage()) 
     navigate("/");
-    dispatch(removeImages({resetAll: true}))    
-    // navigate(0); // reloads the page
+    navigate(0); // reloads the page    
   }
 
   return (

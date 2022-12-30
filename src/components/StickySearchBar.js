@@ -5,6 +5,8 @@ import { nanoid } from "nanoid";
 import "../styles/StickySearchBar.css";
 import "../styles/Navbar.css"
 import Logo from "./Logo";
+import { useDispatch } from "react-redux";
+import { resetImageGridState, resetLocalStorage } from "../reducers/imageReducer";
 
 // search bar on the top of the screen
 const StickySearchBar = ({ alwaysSticky }) => {
@@ -26,9 +28,13 @@ const StickySearchBar = ({ alwaysSticky }) => {
 
   const {query} = useParams()
   const [searchQuery, setSearchQuery] = useState(query)
+  
+  const dispatch = useDispatch()
 
   const onSubmit = (event) => {
     event.preventDefault()
+    dispatch(resetImageGridState({resetAll : true}))
+    dispatch(resetLocalStorage())
     navigate(`/search/${searchQuery}`)
     navigate(0)
   }

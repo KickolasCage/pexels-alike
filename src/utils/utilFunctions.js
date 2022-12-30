@@ -1,3 +1,4 @@
+// capitalizes every word in sentence
 export const capitalize = (string) => {
     return string
       .toLowerCase()
@@ -8,11 +9,13 @@ export const capitalize = (string) => {
       .join(" ");
   };
 
+// picks random number for page
 export const randomPage = () => {
     return Math.floor(Math.random() * 100).toString()
 }
 
-export const debounce = (func, timeout = 400) => {    
+// puts a pause on the next execution of given function
+export const debounce = (func, timeout = 100) => {    
     let timer;
     return (...args) => {
       
@@ -21,7 +24,8 @@ export const debounce = (func, timeout = 400) => {
     };
   }
 
-
+// splits array of images into three columns
+// all having roughly same height
 export const balanceGridColumns = (imgArray, oldColumnHeights= [0,0,0]) => {
     const columns = [[], [], []]
     const columnHeights = [...oldColumnHeights]
@@ -32,7 +36,36 @@ export const balanceGridColumns = (imgArray, oldColumnHeights= [0,0,0]) => {
         const height = img.height
         columns[index] = columns[index].concat(img)
         columnHeights[index] += height
-    }
-    const balancedImgArray = columns.flat()
+    }    
+    const balancedImgArray = columns
     return {balancedImgArray, columnHeights}
 }
+
+// returns 7 random popular search queries
+export const choose7RandomCategories = () => {
+  const images = [
+    "Nature",
+    "Christmas",
+    "Landscape",
+    "Abstract",
+    "Forest",
+    "Dark",
+    "Winter",
+    "Office",
+    "Coffee",
+    "Dog",
+    "Car",
+    "Sunset",
+    "Animal",
+    "Flowers",
+    "Space",
+    "Technology",
+    "Art",
+    "House",
+    "Sky"
+  ];
+
+  return images.sort(() => 0.5 - Math.random()).slice(0, 7);
+};
+
+

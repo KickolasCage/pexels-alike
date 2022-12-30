@@ -13,14 +13,8 @@ import { debounce } from "../../utils/utilFunctions";
 // according to user-submitted query
 const ImageGrid = (params) => {
   const dispatch = useDispatch();
-  const images = useSelector((state) => state.images.imagesList);
+  const columns = useSelector((state) => state.images.columns);
 
-  // utility function for splitting array of images
-  // into 3 arrays
-  const takeEvery3th = (array, offset) =>
-    array.filter((value, index, Arr) => {
-      return (index - offset) % 3 == 0;
-    });
   // gets browser window's width
   const getWidth = () =>
     window.innerWidth ||
@@ -45,12 +39,11 @@ const ImageGrid = (params) => {
   // implements infinite scroll
   // by loading new images
   const onScroll = debounce(() => {
-    console.log("On scroll event handler!");
     const scrollTop = document.documentElement.scrollTop;
     const scrollHeight = document.documentElement.scrollHeight;
     const clientHeight = document.documentElement.clientHeight;
     // const bottomOffset = width > 960 ? 50 : 150;
-    if (scrollTop + clientHeight >= scrollHeight - 100) {
+    if (scrollTop + clientHeight >= scrollHeight * 0.8) {
       // pages are loaded based on the initial query
       // made by the outer container
       dispatch(loadImages());
@@ -71,16 +64,10 @@ const ImageGrid = (params) => {
   const isCurated = useSelector((state) => state.images.isCurated);
 
   const chooseSize = (img, imgSize) => {
-    // const chooseSizeRandomly = () => {      
-    //   return ["large", "medium"][Math.floor(Math.random() * 2)];
-    // };
     return imgSize == "all" ? img.src[img.preferredSize] : img.src[size];
   };
 
-  // const chooseWidthForSize = {"all": 400, "large": 400, "small": 200, "medium": 300}
-
-  const computeWidth = (size) => {
-    // widths for images (normal and minimal)
+  const computeWidthAndHeight = (size, img) => {
     const optimalWidth = (width * 0.8) / 3;
     const minWidth = 200;
     const maxWidths = {
@@ -91,35 +78,44 @@ const ImageGrid = (params) => {
     };
     const maxWidth = maxWidths[size];
 
-    if (optimalWidth > maxWidth) return maxWidth;
-    else if (optimalWidth < minWidth) return minWidth;
-    else return optimalWidth;
+    let imgWidth;
+
+    if (optimalWidth > maxWidth) {
+      imgWidth = maxWidth;
+    } else if (optimalWidth < minWidth) {
+      imgWidth = minWidth;
+    } else {
+      imgWidth = optimalWidth;
+    }
+
+    const imgHeight = img.height * (imgWidth / img.width);    
+    return { height: imgHeight, width: imgWidth };
   };
 
-  return images.length == 0 && isFetched ? (
+  return columns.flat().length == 0 && isFetched ? (
     <ImagesNotFound />
   ) : (
     <>
       <div className="image-grid">
-        {/* <p className="image-grid-header">
-          <b>Free stock images</b>
-        </p> */}
         {[0, 1, 2].map((offset) => (
           <div className="image-grid-column" key={nanoid()}>
-            {takeEvery3th(images, offset).map((img, ind) => (
-              // <img src={img.src.tiny}></img>
-              <Image
-                key={nanoid()}
-                authorName={img.photographer}
-                authorFace={""}
-                image={isCurated ? img.src.large : chooseSize(img, size)}
-                isLiked={img.liked}
-                authorLink={img.photographer_url}
-                id={img.id}
-                alt={img.alt}
-                width={computeWidth(size)}
-              />
-            ))}
+            {columns[offset].map((img, ind) => {
+              let { height, width } = computeWidthAndHeight(size, img);
+              return (
+                <Image
+                  key={nanoid()}
+                  authorName={img.photographer}
+                  authorFace={""}
+                  image={isCurated ? img.src.large : chooseSize(img, size)}
+                  isLiked={img.liked}
+                  authorLink={img.photographer_url}
+                  id={img.id}
+                  alt={img.alt}
+                  width={width}
+                  height={height}
+                />
+              );
+            })}
           </div>
         ))}
       </div>

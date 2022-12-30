@@ -11,8 +11,8 @@ import { numOfPagesToFetch } from "../../utils/consts";
 // main/landing page
 const MainPage = () => {
   const dispatch = useDispatch();
-  const isFetchedImages = useSelector((state) => state.images.isFetched);
-  useEffect(() => {    
+  const state = useSelector((state) => state);
+  useEffect(() => {  
     dispatch(setCurated(true))
     dispatch(
       loadImages({        

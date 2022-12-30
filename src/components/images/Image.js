@@ -7,7 +7,7 @@ import IconHeartNotLiked from "../icons/IconHeartNotLiked";
 import "../../styles/Icons.css";
 import "../../styles/AuthorInfo.css";
 
-import { switchLike } from "../../reducers/imageReducer";
+import { saveLocalStorage, switchLike } from "../../reducers/imageReducer";
 import { useState } from "react";
 
 // component for displaying images
@@ -21,27 +21,29 @@ const Image = (props) => {
   const id = props.id;
   const alt = props.alt;
   const width = props.width;
+  const height = props.height
 
   const [isLikedLocal, setIsLikedLocal] = useState(isLiked);
 
   const dispatch = useDispatch();
 
-  const onClick = () => {
-    setIsLikedLocal(!isLikedLocal);
-    dispatch(switchLike({ id }));
+  const onClick = () => {        
+    dispatch(switchLike({ id }));        
   };
+  
 
   return (
     <div className="image-container" width={width}>
       <div className="image-info-container" width={width}>
         <div className="author-info">
-          {/* photographer's profile image */}
-          <img
+          {/* photographer's profile image (isn't displayed currently since
+              API doesn't provide a way to obtain it */}
+          {/* <img
             className="author-image"
             width={40}
             height={40}
             src={authorFace}
-          />
+          /> */}
           {/* link to photographer's profile */}
           <a
             style={{ textDecoration: "none" }}
@@ -54,7 +56,7 @@ const Image = (props) => {
         </div>
         {/* icons for downoading, liking and adding image to the library */}
         <div className="icons">
-          {isLikedLocal ? (
+          {isLiked ? (
             <IconHeartLiked className="icon" onClick={onClick} />
           ) : (
             <IconHeartNotLiked className="icon" onClick={onClick} />
@@ -64,7 +66,7 @@ const Image = (props) => {
         </div>
       </div>
       {/* image itself */}
-      <img width={width} src={image} alt={alt} />
+      <img height={height} width={width} src={image} alt={alt} />
     </div>
   );
 };

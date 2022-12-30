@@ -23,7 +23,8 @@
 }
 
 .search-example-links:hover {
-  color: gray;
+  color: black;
+  cursor: pointer;
 }
 
 .search-h {
@@ -66,7 +67,7 @@
   font-size: large;
   color: inherit;
   border: none;  
-  width: max(40vw, 150px);    
+  width: max(50vw, 150px);    
 }
 
 .search-input:focus{
